@@ -151,10 +151,10 @@ function VehicleModal({ open, onClose, vehicle }) {
                 </Box>
             </DialogContent>
             <DialogActions sx={{ pr: 2 }}> {/* Add padding right */}
-                <Button onClick={onClose} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2 }}> {/* Change font size and padding right */}
+                <Button onClick={onClose} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2, pt:2, pl:2 }}> {/* Change font size and padding right */}
                     Cancel
                 </Button>
-                <Button onClick={handleUpdate} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2 }}> {/* Change font size and padding right */}
+                <Button onClick={handleUpdate} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2, pt:2, pl:2 }}> {/* Change font size and padding right */}
                     Update
                 </Button>
             </DialogActions>

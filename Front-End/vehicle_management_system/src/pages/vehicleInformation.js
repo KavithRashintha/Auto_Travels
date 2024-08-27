@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import VehicleModal from '../pages/viewVehicle';
+import AddVehicleModal from '../pages/addVehicle';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -39,6 +40,7 @@ function VehicleInformation() {
     const [vehicles, setVehicles] = useState([]);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
+    const [addModalOpen, setAddModalOpen] = useState(false); // State for Add Vehicle Modal
 
     useEffect(() => {
         fetchVehicles();
@@ -81,16 +83,40 @@ function VehicleInformation() {
         setModalOpen(false);
     };
 
+    const handleOpenAddModal = () => {
+        setAddModalOpen(true);
+    };
+
+    const handleCloseAddModal = () => {
+        setAddModalOpen(false);
+    };
+
     return (
         <div>
-            <h1 style={{ color: '#4834d4', fontSize: '32px', fontFamily: 'Inter', marginLeft: '68px', marginBottom: '32px' }}>
-                Vehicle Information
-            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '32px' }}>
+                <h1 style={{ color: '#4834d4', fontSize: '32px', fontFamily: 'Inter', marginLeft: '68px' }}>
+                    Vehicle Information
+                </h1>
+                <Button
+                    variant="contained"
+                    sx={{
+                        marginLeft: 'auto',
+                        fontSize: '11px',
+                        padding: '8px 14px',
+                        marginRight: '70px',
+                        backgroundColor: '#22a6b3',
+                        color: 'white'
+                    }}
+                    onClick={handleOpenAddModal}
+                >
+                    Add Vehicle
+                </Button>
+            </div>
             <StyledTableContainer component={Paper}>
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center" style={{ paddingLeft: '12px' }}>ID</StyledTableCell>
+                            <StyledTableCell style={{ paddingLeft: '16px' }}>ID</StyledTableCell>
                             <StyledTableCell align="center">Brand</StyledTableCell>
                             <StyledTableCell align="center">Model</StyledTableCell>
                             <StyledTableCell align="center">Year</StyledTableCell>
@@ -124,7 +150,7 @@ function VehicleInformation() {
                                     <Button
                                         variant="contained"
                                         color="error"
-                                        style={{ fontSize: '9px', padding: '8px 14px', marginLeft: '14px', backgroundColor: 'red' }}
+                                        style={{ fontSize: '9px', padding: '8px 14px', marginLeft: '8px' }}
                                         onClick={() => handleDelete(vehicle.id)}
                                     >
                                         Delete
@@ -143,6 +169,12 @@ function VehicleInformation() {
                     vehicle={selectedVehicle}
                 />
             )}
+
+            <AddVehicleModal
+                open={addModalOpen}
+                onClose={handleCloseAddModal}
+                onSuccess={fetchVehicles} // Reload data after successful addition
+            />
         </div>
     );
 }
