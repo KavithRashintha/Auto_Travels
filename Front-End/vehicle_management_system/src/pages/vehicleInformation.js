@@ -9,18 +9,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import VehicleModal from '../pages/viewVehicle';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: theme.palette.common.black,
         color: theme.palette.common.white,
-        textAlign: 'center', // Center-align text in header cells
-        paddingRight: '32px', // Add right padding to header cells
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-        textAlign: 'center', // Center-align text in body cells
-        paddingRight: '32px', // Add right padding to body cells
     },
 }));
 
@@ -40,6 +37,8 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 
 function VehicleInformation() {
     const [vehicles, setVehicles] = useState([]);
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         axios.get('http://localhost:8080/vehicle/getAll')
@@ -52,48 +51,58 @@ function VehicleInformation() {
             });
     }, []);
 
+    const handleViewClick = (vehicleId) => {
+        axios.get(`http://localhost:8080/vehicle/get/${vehicleId}`)
+            .then(response => {
+                setSelectedVehicle(response.data);
+                setModalOpen(true);
+            })
+            .catch(error => {
+                console.error('Error fetching vehicle details:', error);
+            });
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
     return (
         <div>
-            <h1 style={{ color: '#4834d4', fontSize: '32px', fontFamily: 'Inter', marginLeft: '64px', marginBottom: '36px' }}>
+            <h1 style={{ color: '#4834d4', fontSize: '32px', fontFamily: 'Inter', marginLeft: '68px', marginBottom: '32px' }}>
                 Vehicle Information
             </h1>
             <StyledTableContainer component={Paper}>
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell style={{ paddingLeft: '12px' }}>ID</StyledTableCell>
-                            <StyledTableCell>Brand</StyledTableCell>
-                            <StyledTableCell>Model</StyledTableCell>
-                            <StyledTableCell>Year</StyledTableCell>
-                            <StyledTableCell>Millage</StyledTableCell>
-                            <StyledTableCell>Vehicle Number</StyledTableCell>
-                            <StyledTableCell>Rental Status</StyledTableCell>
-                            <StyledTableCell>Actions</StyledTableCell>
+                            <StyledTableCell>ID</StyledTableCell>
+                            <StyledTableCell align="center">Brand</StyledTableCell>
+                            <StyledTableCell align="center">Model</StyledTableCell>
+                            <StyledTableCell align="center">Year</StyledTableCell>
+                            <StyledTableCell align="center">Millage</StyledTableCell>
+                            <StyledTableCell align="center">Vehicle Number</StyledTableCell>
+                            <StyledTableCell align="center">Rental Status</StyledTableCell>
+                            <StyledTableCell align="center">Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {vehicles.map((vehicle) => (
                             <StyledTableRow key={vehicle.id}>
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    style={{ paddingLeft: '32px' }} // Inline style for left padding in data cell
-                                >
-                                    {vehicle.id}
-                                </TableCell>
-                                <StyledTableCell>{vehicle.brand}</StyledTableCell>
-                                <StyledTableCell>{vehicle.model}</StyledTableCell>
-                                <StyledTableCell>{vehicle.year}</StyledTableCell>
-                                <StyledTableCell>{vehicle.millage}</StyledTableCell>
-                                <StyledTableCell>{vehicle.vehicleNumber}</StyledTableCell>
-                                <StyledTableCell>
+                                <StyledTableCell align="center">{vehicle.id}</StyledTableCell>
+                                <StyledTableCell align="center">{vehicle.brand}</StyledTableCell>
+                                <StyledTableCell align="center">{vehicle.model}</StyledTableCell>
+                                <StyledTableCell align="center">{vehicle.year}</StyledTableCell>
+                                <StyledTableCell align="center">{vehicle.millage}</StyledTableCell>
+                                <StyledTableCell align="center">{vehicle.vehicleNumber}</StyledTableCell>
+                                <StyledTableCell align="center">
                                     {vehicle.rentalStatus ? 'Rented' : 'Available'}
                                 </StyledTableCell>
-                                <StyledTableCell>
+                                <StyledTableCell align="center">
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        style={{ fontSize: '8px', padding: '8px 14px 8px 14px' }} // Inline style for button text size
+                                        style={{ fontSize: '9px', padding: '8px 14px 8px 14px' }}
+                                        onClick={() => handleViewClick(vehicle.id)}
                                     >
                                         View
                                     </Button>
@@ -103,6 +112,14 @@ function VehicleInformation() {
                     </TableBody>
                 </Table>
             </StyledTableContainer>
+
+            {selectedVehicle && (
+                <VehicleModal
+                    open={modalOpen}
+                    onClose={handleCloseModal}
+                    vehicle={selectedVehicle}
+                />
+            )}
         </div>
     );
 }
