@@ -13,5 +13,7 @@ public interface VehicleService {
 
     public Vehicle getVehicle(int id);
 
+    public List<Vehicle> getAvailableVehicles();
+
     public boolean deleteVehicle(int id);
 }

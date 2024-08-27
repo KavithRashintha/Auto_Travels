@@ -41,6 +41,12 @@ public class VehicleController {
         return vehicleService.getVehicle(id);
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<Vehicle>> getAvailableVehicles() {
+        List<Vehicle> availableVehicles = vehicleService.getAvailableVehicles();
+        return ResponseEntity.ok(availableVehicles);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteVehicle(@PathVariable int id) {
         boolean isDeleted = vehicleService.deleteVehicle(id);

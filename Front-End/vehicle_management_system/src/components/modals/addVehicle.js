@@ -27,7 +27,7 @@ function AddVehicleModal({ open, onClose, onSuccess }) {
             ...formData,
             year: parseInt(formData.year, 10),
             millage: parseFloat(formData.millage),
-            rentalStatus: true
+            rentalStatus: false
         };
 
         console.log(updatedFormData);

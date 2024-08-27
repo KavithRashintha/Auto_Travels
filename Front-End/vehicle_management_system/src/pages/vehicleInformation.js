@@ -9,8 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import VehicleModal from '../pages/viewVehicle';
-import AddVehicleModal from '../pages/addVehicle';
+import VehicleModal from '../components/modals/viewVehicle';
+import AddVehicleModal from '../components/modals/addVehicle';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -93,7 +93,7 @@ function VehicleInformation() {
 
     return (
         <div>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', marginTop: '14px' }}>
                 <h1 style={{ color: '#4834d4', fontSize: '32px', fontFamily: 'Inter', marginLeft: '68px' }}>
                     Vehicle Information
                 </h1>
