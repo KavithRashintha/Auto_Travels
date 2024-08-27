@@ -41,6 +41,10 @@ function VehicleInformation() {
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
+        fetchVehicles();
+    }, []);
+
+    const fetchVehicles = () => {
         axios.get('http://localhost:8080/vehicle/getAll')
             .then(response => {
                 setVehicles(response.data);
@@ -49,7 +53,7 @@ function VehicleInformation() {
             .catch(error => {
                 console.error('Error fetching vehicle data:', error);
             });
-    }, []);
+    };
 
     const handleViewClick = (vehicleId) => {
         axios.get(`http://localhost:8080/vehicle/get/${vehicleId}`)
@@ -59,6 +63,17 @@ function VehicleInformation() {
             })
             .catch(error => {
                 console.error('Error fetching vehicle details:', error);
+            });
+    };
+
+    const handleDelete = (vehicleId) => {
+        axios.delete(`http://localhost:8080/vehicle/delete/${vehicleId}`)
+            .then(response => {
+                console.log('Vehicle deleted:', response.data);
+                fetchVehicles(); // Reload data after successful deletion
+            })
+            .catch(error => {
+                console.error('There was an error deleting the vehicle:', error);
             });
     };
 
@@ -75,7 +90,7 @@ function VehicleInformation() {
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>ID</StyledTableCell>
+                            <StyledTableCell align="center" style={{ paddingLeft: '12px' }}>ID</StyledTableCell>
                             <StyledTableCell align="center">Brand</StyledTableCell>
                             <StyledTableCell align="center">Model</StyledTableCell>
                             <StyledTableCell align="center">Year</StyledTableCell>
@@ -101,10 +116,18 @@ function VehicleInformation() {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        style={{ fontSize: '9px', padding: '8px 14px 8px 14px' }}
+                                        style={{ fontSize: '9px', padding: '8px 14px' }}
                                         onClick={() => handleViewClick(vehicle.id)}
                                     >
                                         View
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        style={{ fontSize: '9px', padding: '8px 14px', marginLeft: '14px', backgroundColor: 'red' }}
+                                        onClick={() => handleDelete(vehicle.id)}
+                                    >
+                                        Delete
                                     </Button>
                                 </StyledTableCell>
                             </StyledTableRow>
