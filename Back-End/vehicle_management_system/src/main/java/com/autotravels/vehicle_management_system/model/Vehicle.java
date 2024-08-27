@@ -17,6 +17,8 @@ public class Vehicle {
     private double millage;
     private boolean rentalStatus;
 
+    private String photo;
+
     public Vehicle() {
     }
 
@@ -50,6 +52,14 @@ public class Vehicle {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getVehicleNumber() {
