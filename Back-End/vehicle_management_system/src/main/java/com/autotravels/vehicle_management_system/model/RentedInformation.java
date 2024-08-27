@@ -10,7 +10,6 @@ public class RentedInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String rentedPerson;
     private String NIC;
     private String address;

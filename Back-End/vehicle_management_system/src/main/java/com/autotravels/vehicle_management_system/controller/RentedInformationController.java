@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rentedInformation")
@@ -39,6 +40,12 @@ public class RentedInformationController {
     @GetMapping("/get/{id}")
     public RentedInformation getRentedInformation(@PathVariable int id) {
         return rentedInformationService.getRentedInformation(id);
+    }
+
+    @GetMapping("/all-with-status")
+    public ResponseEntity<List<List<Map<String, Object>>>> getAllRentedInformationWithStatus() {
+        List<List<Map<String, Object>>> rentedInformationWithStatus = rentedInformationService.getAllRentedInformationWithStatus();
+        return ResponseEntity.ok(rentedInformationWithStatus);
     }
 
     @DeleteMapping("/delete/{id}")
