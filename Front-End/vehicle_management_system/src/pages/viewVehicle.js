@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, Grid, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import axios from 'axios'; // Import axios
+import { Dialog, DialogContent, DialogActions, TextField, Button, Box, Grid, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 function VehicleModal({ open, onClose, vehicle }) {
     const [formData, setFormData] = useState(vehicle);
@@ -29,16 +30,19 @@ function VehicleModal({ open, onClose, vehicle }) {
         });
     };
 
-    const handleSave = () => {
-        // Implement the logic to save the updated vehicle information
-        console.log('Updated vehicle data:', formData);
-        // Example: axios.put(`/api/vehicles/${formData.id}`, formData)
-        onClose();
+    const handleUpdate = () => {
+        axios.put('http://localhost:8080/vehicle/update', formData)
+            .then(response => {
+                console.log('Vehicle updated:', response.data);
+                onClose(); // Close the modal on successful update
+            })
+            .catch(error => {
+                console.error('There was an error updating the vehicle:', error);
+            });
     };
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            {/*<DialogTitle>Vehicle Details</DialogTitle>*/}
             <DialogContent sx={{ pt: 4 }}> {/* Add padding top */}
                 <Box display="flex" alignItems="flex-start">
                     <img
@@ -150,7 +154,7 @@ function VehicleModal({ open, onClose, vehicle }) {
                 <Button onClick={onClose} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2 }}> {/* Change font size and padding right */}
                     Cancel
                 </Button>
-                <Button onClick={handleSave} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2 }}> {/* Change font size and padding right */}
+                <Button onClick={handleUpdate} color="primary" sx={{ fontSize: '12px', pr: 2, pb:2 }}> {/* Change font size and padding right */}
                     Update
                 </Button>
             </DialogActions>
