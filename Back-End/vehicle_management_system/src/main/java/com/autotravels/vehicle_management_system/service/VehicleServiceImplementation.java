@@ -44,6 +44,12 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
+    public Vehicle getVehicle(int id) {
+        Optional<Vehicle> vehicle = vehicleRepository.findById(id);
+        return vehicle.orElse(null);
+    }
+
+    @Override
     public boolean deleteVehicle(int id) {
         Optional<Vehicle> existingVehicle = vehicleRepository.findById(id);
         if (existingVehicle.isPresent()) {

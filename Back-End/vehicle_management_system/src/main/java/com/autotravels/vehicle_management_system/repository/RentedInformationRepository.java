@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RentedInformationRepository extends JpaRepository<RentedInformation,Integer> {
+
 }
