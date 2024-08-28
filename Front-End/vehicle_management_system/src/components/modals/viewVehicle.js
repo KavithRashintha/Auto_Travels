@@ -43,7 +43,7 @@ function VehicleModal({ open, onClose, vehicle }) {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogContent sx={{ pt: 4 }}> {/* Add padding top */}
+            <DialogContent sx={{ pt: 6 }}> {/* Add padding top */}
                 <Box display="flex" alignItems="flex-start">
                     <img
                         src={formData.photo}

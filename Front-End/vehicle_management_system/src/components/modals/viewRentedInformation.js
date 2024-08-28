@@ -90,7 +90,7 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo 
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogContent sx={{ pt: 4 }}>
+            <DialogContent sx={{ pt: 7 }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <TextField
@@ -154,11 +154,19 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo 
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary">
+            <DialogActions sx={{ pr: 2 }}> {/* Add padding right */}
+                <Button
+                    onClick={onClose}
+                    color="primary"
+                    sx={{ fontSize: '12px', pr: 2, pb: 2, pt: 2, pl: 2 }} // Style similar to VehicleModal
+                >
                     Cancel
                 </Button>
-                <Button onClick={handleUpdate} color="primary" variant="contained">
+                <Button
+                    onClick={handleUpdate}
+                    color="primary"
+                    sx={{ fontSize: '12px', pr: 2, pb: 2, pt: 2, pl: 2 }} // Style similar to VehicleModal
+                >
                     Update
                 </Button>
             </DialogActions>
