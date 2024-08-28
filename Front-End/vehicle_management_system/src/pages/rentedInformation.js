@@ -7,7 +7,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import axios from 'axios';
+import RentedInformationModal from "../components/modals/viewRentedInformation"; // Ensure this path is correct
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -35,6 +37,9 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 
 function RentedInformation() {
     const [rentedInfo, setRentedInfo] = useState([]);
+    const [selectedInfo, setSelectedInfo] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
 
     useEffect(() => {
         fetchRentedInformation();
@@ -43,13 +48,50 @@ function RentedInformation() {
     const fetchRentedInformation = () => {
         axios.get('http://localhost:8080/rentedInformation/all-with-status')
             .then(response => {
-                const flattenedData = response.data.flat(); // Flatten the array of arrays
+                const flattenedData = response.data.flat();
                 setRentedInfo(flattenedData);
-                console.log(flattenedData);
             })
             .catch(error => {
                 console.error('Error fetching rented information data:', error);
             });
+    };
+
+    const handleViewClick = (infoId) => {
+        axios.get(`http://localhost:8080/rentedInformation/get/${infoId}`)
+            .then(response => {
+                setSelectedInfo(response.data);
+                getVehicleInfo(response.data.vehicleId);
+                setModalOpen(true);
+            })
+            .catch(error => {
+                console.error('Error fetching rented information details:', error);
+            });
+    };
+
+    const getVehicleInfo = (vehicleId) => {
+        axios.get(`http://localhost:8080/vehicle/get/${vehicleId}`)
+            .then(response => {
+                setSelectedVehicle(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching vehicle details:', error);
+            });
+    };
+
+    const handleDelete = (infoId) => {
+        axios.delete(`http://localhost:8080/rentedInformation/delete/${infoId}`)
+            .then(response => {
+                console.log('Rented Information deleted:', response.data);
+                fetchRentedInformation();
+            })
+            .catch(error => {
+                console.error('There was an error deleting the rented information:', error);
+            });
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
     };
 
     return (
@@ -68,6 +110,7 @@ function RentedInformation() {
                             <StyledTableCell align="center">Mobile</StyledTableCell>
                             <StyledTableCell align="center">Vehicle ID</StyledTableCell>
                             <StyledTableCell align="center">Rental Status</StyledTableCell>
+                            <StyledTableCell align="center">Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -80,11 +123,38 @@ function RentedInformation() {
                                 <StyledTableCell align="center">{info.mobile}</StyledTableCell>
                                 <StyledTableCell align="center">{info.vehicleId}</StyledTableCell>
                                 <StyledTableCell align="center">{info.rentalStatus}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ fontSize: '9px', padding: '8px 14px' }}
+                                        onClick={() => handleViewClick(info.id)}
+                                    >
+                                        View
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        style={{ fontSize: '9px', padding: '8px 14px', marginLeft: '8px' }}
+                                        onClick={() => handleDelete(info.id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
                 </Table>
             </StyledTableContainer>
+
+            {selectedInfo && (
+                <RentedInformationModal
+                    open={modalOpen}
+                    onClose={handleCloseModal}
+                    rentedInformation={selectedInfo}
+                    vehicleInfo={selectedVehicle}
+                />
+            )}
         </div>
     );
 }
