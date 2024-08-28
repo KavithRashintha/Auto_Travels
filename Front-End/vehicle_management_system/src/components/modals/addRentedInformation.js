@@ -5,6 +5,10 @@ import axios from 'axios';
 function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo, onAdd }) {
     const [vehicles, setVehicles] = useState([]);
     const [selectedVehicle, setSelectedVehicle] = useState(vehicleInfo ? vehicleInfo.id : '');
+    const [rentedPerson, setRentedPerson] = useState(rentedInformation?.rentedPerson || '');
+    const [nic, setNic] = useState(rentedInformation?.nic || '');
+    const [address, setAddress] = useState(rentedInformation?.address || '');
+    const [mobile, setMobile] = useState(rentedInformation?.mobile || '');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -29,11 +33,38 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo,
         setSelectedVehicle(event.target.value);
     };
 
-    const handleAdd = () => {
-        if (onAdd) {
-            onAdd(selectedVehicle);
+    const handleAdd = async () => {
+        const newRentedInformation = {
+            rentedPerson,
+            nic,
+            address,
+            mobile,
+            vehicleId: selectedVehicle
+        };
+
+        try {
+            // Create rentedInformation record
+            await axios.post('http://localhost:8080/rentedInformation/add', newRentedInformation);
+
+            // Find the selected vehicle details
+            const selectedVehicleDetails = vehicles.find(vehicle => vehicle.id === selectedVehicle);
+
+            // Update vehicle rentalStatus and send the complete vehicle object
+            await axios.put(`http://localhost:8080/vehicle/update`, {
+                ...selectedVehicleDetails, // Spread the existing vehicle details
+                rentalStatus: true, // Update the rentalStatus
+            });
+
+            // Notify parent component
+            if (onAdd) {
+                onAdd(selectedVehicle);
+            }
+
+            // Close the modal
+            onClose();
+        } catch (error) {
+            console.error('Error adding rented information:', error);
         }
-        onClose();
     };
 
     const handleClose = () => {
@@ -42,7 +73,7 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo,
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            {/*<DialogTitle>Rented Information</DialogTitle>*/}
+            <DialogTitle>Rented Information</DialogTitle>
             <DialogContent>
                 <div>
                     <TextField
@@ -51,10 +82,8 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo,
                         fullWidth
                         variant="outlined"
                         size="small"
-                        value={rentedInformation?.rentedPerson || ''}
-                        InputProps={{
-                            readOnly: true,
-                        }}
+                        value={rentedPerson}
+                        onChange={(e) => setRentedPerson(e.target.value)}
                         sx={{ mb: 2 }}  // margin-bottom for 16px gap
                     />
                     <TextField
@@ -63,10 +92,8 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo,
                         fullWidth
                         variant="outlined"
                         size="small"
-                        value={rentedInformation?.nic || ''}
-                        InputProps={{
-                            readOnly: true,
-                        }}
+                        value={nic}
+                        onChange={(e) => setNic(e.target.value)}
                         sx={{ mb: 2 }}  // margin-bottom for 16px gap
                     />
                     <TextField
@@ -75,10 +102,8 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo,
                         fullWidth
                         variant="outlined"
                         size="small"
-                        value={rentedInformation?.address || ''}
-                        InputProps={{
-                            readOnly: true,
-                        }}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                         sx={{ mb: 2 }}  // margin-bottom for 16px gap
                     />
                     <TextField
@@ -87,10 +112,8 @@ function RentedInformationModal({ open, onClose, rentedInformation, vehicleInfo,
                         fullWidth
                         variant="outlined"
                         size="small"
-                        value={rentedInformation?.mobile || ''}
-                        InputProps={{
-                            readOnly: true,
-                        }}
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
                         sx={{ mb: 2 }}  // margin-bottom for 16px gap
                     />
                     <TextField
