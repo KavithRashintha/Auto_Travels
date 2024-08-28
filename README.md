@@ -1,4 +1,4 @@
-**Project Description: Auto Travels**
+**Auto Travels : A Vehicle Management System**
 
 Auto Travels is a comprehensive vehicle management system designed to streamline vehicle tracking, rental management, and information storage. This project serves as a practical demonstration of my skills in full-stack application development, utilizing a range of modern technologies.
 
